@@ -11,7 +11,7 @@ function HomePage() {
         <Typography variant='h4' fontWeight={500} my={3}>
           Image Annotation App
         </Typography>
-        <Stack direction='row'>
+        <Stack direction={{ sm: "column", md: "row" }}>
           <Images />
           <Stack gap={4}>
             <UploadImage />

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Paper } from "@mui/material";
+import { Box, Button, Paper } from "@mui/material";
 import React, { useState } from "react";
 import CreateImageModal from "./create-image-modal";
 
@@ -11,22 +11,30 @@ function UploadImage() {
   return (
     <>
       {/* Upload image button */}
-      <Paper
-        sx={{
-          minWidth: 280,
-          padding: "1rem",
+      <Box
+        mt={{
+          xs: 4,
+          sm: 4,
+          md: 0,
         }}
       >
-        <Button
-          variant='contained'
+        <Paper
           sx={{
-            width: "100%",
+            minWidth: 280,
+            padding: "1rem",
           }}
-          onClick={() => setCreateImage(true)}
         >
-          Upload Image
-        </Button>
-      </Paper>
+          <Button
+            variant='contained'
+            sx={{
+              width: "100%",
+            }}
+            onClick={() => setCreateImage(true)}
+          >
+            Upload Image
+          </Button>
+        </Paper>
+      </Box>
 
       {/* Create image modal */}
       <CreateImageModal

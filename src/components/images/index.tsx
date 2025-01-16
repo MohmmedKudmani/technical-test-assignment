@@ -74,7 +74,7 @@ function Images() {
               return (
                 <Paper
                   key={image.id}
-                  sx={{
+                  sx={(theme) => ({
                     position: "relative",
                     padding: "0.5rem",
                     cursor: "pointer",
@@ -84,7 +84,10 @@ function Images() {
                         opacity: 1,
                       },
                     },
-                  }}
+                    [theme.breakpoints.down("sm")]: {
+                      width: "100%",
+                    },
+                  })}
                   onMouseEnter={(e) => {
                     e.stopPropagation();
                   }}
@@ -112,9 +115,12 @@ function Images() {
                   <Box
                     sx={{
                       position: "relative",
-                      width: 250,
-                      height: 200,
                     }}
+                    width={{
+                      xs: "100%",
+                      sm: 250,
+                    }}
+                    height={200}
                   >
                     <Image
                       style={{
@@ -122,9 +128,8 @@ function Images() {
                       }}
                       src={image.url}
                       alt={image.name}
-                      width={250}
-                      height={200}
                       priority
+                      fill
                     />
                     <Box
                       className='overlay'
