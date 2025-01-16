@@ -1,5 +1,6 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import Menu, { MenuProps } from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -7,6 +8,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box } from "@mui/material";
+import { useState } from "react";
 
 // Update menu styles using emotion
 const StyledMenu = styled((props: MenuProps) => (
@@ -60,7 +62,7 @@ interface Props {
 
 function ActionsMenu({ handleDelete, handleEdit }: Props) {
   // Menu state
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   // Menu handlers
