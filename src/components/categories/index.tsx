@@ -1,7 +1,14 @@
 "use client";
 
 import useCategories from "@/common/hooks/useCategories";
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 import ActionsMenu from "../ui/actions-menu";
@@ -12,8 +19,12 @@ import CreateCategoryModal from "./create-category-modal";
 
 function Categories() {
   // Categories hooks
-  const { categories, mutateDeleteCategory, mutateDeleteCategoryStatus } =
-    useCategories();
+  const {
+    categories,
+    categoriesStatus,
+    mutateDeleteCategory,
+    mutateDeleteCategoryStatus,
+  } = useCategories();
 
   // selected category
   const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(
@@ -46,55 +57,69 @@ function Categories() {
 
         {/* Categories list */}
         <Stack gap={3}>
-          {categories.map((category) => (
-            <Box
-              key={category.id}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
+          {categoriesStatus === "pending" ? (
+            <Stack
+              justifyContent='center'
+              alignItems='center'
+              height='50vh'
+              width='100%'
             >
-              <Stack direction='row' alignItems='center' gap={1}>
-                <Image
-                  src={category.image}
-                  alt={category.name}
-                  width={50}
-                  height={50}
-                  style={{
-                    borderRadius: "50%",
-                  }}
-                />
-                <div>
-                  <Typography
-                    variant='body1'
-                    style={{ fontWeight: "bold", fontSize: "0.9rem" }}
-                  >
-                    {category.name}
-                  </Typography>
-                  <Typography variant='inherit' style={{ fontSize: "0.9rem" }}>
-                    {category.description}
-                  </Typography>
-                </div>
-              </Stack>
+              <CircularProgress />
+            </Stack>
+          ) : (
+            categories.map((category) => (
               <Box
+                key={category.id}
                 sx={{
-                  ml: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                <ActionsMenu
-                  handleDelete={() => {
-                    setSelectedCategory(category);
-                    setDeleteModal(true);
+                <Stack direction='row' alignItems='center' gap={1}>
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    width={50}
+                    height={50}
+                    style={{
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <div>
+                    <Typography
+                      variant='body1'
+                      style={{ fontWeight: "bold", fontSize: "0.9rem" }}
+                    >
+                      {category.name}
+                    </Typography>
+                    <Typography
+                      variant='inherit'
+                      style={{ fontSize: "0.9rem" }}
+                    >
+                      {category.description}
+                    </Typography>
+                  </div>
+                </Stack>
+                <Box
+                  sx={{
+                    ml: 1,
                   }}
-                  handleEdit={() => {
-                    setSelectedCategory(category);
-                    setEditModal(true);
-                  }}
-                />
+                >
+                  <ActionsMenu
+                    handleDelete={() => {
+                      setSelectedCategory(category);
+                      setDeleteModal(true);
+                    }}
+                    handleEdit={() => {
+                      setSelectedCategory(category);
+                      setEditModal(true);
+                    }}
+                  />
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))
+          )}
         </Stack>
 
         {/* Create category button */}
