@@ -20,7 +20,7 @@ function useCategories(id?: number) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch categories");
+      throw new Error("Failed to get categories");
     }
 
     const data = await response.json();
@@ -39,7 +39,7 @@ function useCategories(id?: number) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch categories");
+      throw new Error("Failed to get a category");
     }
 
     const data = await response.json();
@@ -59,7 +59,7 @@ function useCategories(id?: number) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch categories");
+      throw new Error("Failed to create a category");
     }
 
     return response.json();
@@ -76,7 +76,7 @@ function useCategories(id?: number) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch categories");
+        throw new Error("Failed to update a category");
       }
 
       return response.json();
@@ -93,7 +93,7 @@ function useCategories(id?: number) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch categories");
+      throw new Error("Failed to delete a category");
     }
 
     return response.json();

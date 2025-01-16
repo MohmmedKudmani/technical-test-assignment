@@ -20,7 +20,7 @@ function useImages(id?: number) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch images");
+      throw new Error("Failed to get images");
     }
 
     const data = await response.json();
@@ -39,7 +39,7 @@ function useImages(id?: number) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch images");
+      throw new Error("Failed to get an image");
     }
 
     const data = await response.json();
@@ -59,7 +59,7 @@ function useImages(id?: number) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch images");
+      throw new Error("Failed to create an image");
     }
 
     return response.json();
@@ -76,7 +76,7 @@ function useImages(id?: number) {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch images");
+        throw new Error("Failed to update an image");
       }
 
       return response.json();
@@ -93,7 +93,7 @@ function useImages(id?: number) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch images");
+      throw new Error("Failed to delete an image");
     }
 
     return response.json();
