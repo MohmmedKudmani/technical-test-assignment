@@ -1,5 +1,3 @@
-"use client";
-
 import Images from "@/components/images";
 import { Container, Stack, Typography } from "@mui/material";
 import React from "react";
