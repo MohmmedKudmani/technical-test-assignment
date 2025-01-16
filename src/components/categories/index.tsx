@@ -4,14 +4,14 @@ import useCategories from "@/common/hooks/useCategories";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
-import ActionsMenu from "../../lib/ui/actions-menu";
-import ConfirmModal from "../../lib/ui/modals/confirm-modal";
+import ActionsMenu from "../ui/actions-menu";
+import ConfirmModal from "../ui/modals/confirm-modal";
 import { CategoryType } from "@/common/schemas/categories.schema";
 import EditCategoryModal from "./edit-category-modal";
 import CreateCategoryModal from "./create-category-modal";
 
 function Categories() {
-  // hooks
+  // Categories hooks
   const { categories, mutateDeleteCategory, mutateDeleteCategoryStatus } =
     useCategories();
 
@@ -34,6 +34,7 @@ function Categories() {
           height: "fit-content",
         }}
       >
+        {/* Category title */}
         <Typography
           variant='h6'
           sx={{
@@ -42,6 +43,8 @@ function Categories() {
         >
           Categories
         </Typography>
+
+        {/* Categories list */}
         <Stack gap={3}>
           {categories.map((category) => (
             <Box
@@ -93,6 +96,8 @@ function Categories() {
             </Box>
           ))}
         </Stack>
+
+        {/* Create category button */}
         <Button
           onClick={() => setCreateModal(true)}
           variant='contained'
@@ -104,6 +109,8 @@ function Categories() {
           Create a category
         </Button>
       </Paper>
+
+      {/* Confirm delete category modal */}
       {selectedCategory ? (
         <ConfirmModal
           open={deleteModal}
@@ -124,6 +131,8 @@ function Categories() {
           loading={mutateDeleteCategoryStatus === "pending"}
         />
       ) : null}
+
+      {/* Edit category modal */}
       {selectedCategory ? (
         <EditCategoryModal
           category={selectedCategory}
@@ -134,6 +143,8 @@ function Categories() {
           }}
         />
       ) : null}
+
+      {/* Create category modal */}
       <CreateCategoryModal
         onClose={() => setCreateModal(false)}
         open={createModal}

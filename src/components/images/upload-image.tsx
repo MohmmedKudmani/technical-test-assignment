@@ -10,6 +10,7 @@ function UploadImage() {
 
   return (
     <>
+      {/* Upload image button */}
       <Paper
         sx={{
           minWidth: 280,
@@ -27,6 +28,7 @@ function UploadImage() {
         </Button>
       </Paper>
 
+      {/* Create image modal */}
       <CreateImageModal
         onClose={() => setCreateImage(false)}
         open={createImage}

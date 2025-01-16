@@ -8,15 +8,20 @@ import Stack from "@mui/material/Stack";
 import dayjs from "@/lib/dayjs";
 import useCategories from "@/common/hooks/useCategories";
 import Filters from "./filters";
-import ActionsMenu from "@/lib/ui/actions-menu";
+import ActionsMenu from "@/components/ui/actions-menu";
 import { ImageType } from "@/common/schemas/images.schema";
-import ConfirmModal from "@/lib/ui/modals/confirm-modal";
+import ConfirmModal from "@/components/ui/modals/confirm-modal";
 import EditImageModal from "./edit-image-modal";
 
 function Images() {
+  // Images hooks
   const { images, imagesStatus, mutateDeleteImage, mutateDeleteImageStatus } =
     useImages();
+
+  // Categories hooks
   const { categories } = useCategories();
+
+  // filters
   const [category, setCategory] = useState("all");
   const [search, setSearch] = useState("");
 
@@ -27,6 +32,7 @@ function Images() {
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
 
+  // filtered images
   const filteredImages = images.filter((image) => {
     const matchesCategory =
       category === "all" || image.categoryId === +category;
@@ -39,6 +45,7 @@ function Images() {
   return (
     <>
       <section style={{ width: "100%" }}>
+        {/* Filters */}
         <Filters
           categories={categories}
           category={category}
@@ -46,6 +53,8 @@ function Images() {
           setCategory={setCategory}
           setSearch={setSearch}
         />
+
+        {/* Images */}
         <Stack gap={3} direction='row' flexWrap='wrap'>
           {imagesStatus === "pending" ? (
             <Stack
@@ -173,6 +182,8 @@ function Images() {
           )}
         </Stack>
       </section>
+
+      {/* Confirm modal */}
       {selectedImage ? (
         <ConfirmModal
           open={deleteModal}
@@ -193,6 +204,8 @@ function Images() {
           loading={mutateDeleteImageStatus === "pending"}
         />
       ) : null}
+
+      {/* Edit image modal */}
       {selectedImage ? (
         <EditImageModal
           image={selectedImage}

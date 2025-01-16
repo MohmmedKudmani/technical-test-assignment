@@ -8,9 +8,11 @@ interface Props {
 }
 
 export const TanstackProvider = ({ children }: Props) => {
+  // Create a client
   const [queryClient] = useState(() => new QueryClient());
 
   return (
+    // Provide the client to your App
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 };

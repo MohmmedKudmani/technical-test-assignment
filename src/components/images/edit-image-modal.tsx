@@ -1,6 +1,6 @@
-import * as React from "react";
-import { styled, css, Stack } from "@mui/system";
-import Fade from "@mui/material/Fade";
+"use client";
+
+import { styled, Stack } from "@mui/system";
 import {
   Button,
   FormControl,
@@ -10,7 +10,6 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { Modal as BaseModal } from "@mui/base/Modal";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { ImageType, PostImageType } from "@/common/schemas/images.schema";
@@ -18,7 +17,9 @@ import useImages from "@/common/hooks/useImages";
 import { useNotifications } from "@toolpad/core";
 import useCategories from "@/common/hooks/useCategories";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import BaseModal from "../ui/modals/base-modal";
 
+// Edit image modal props
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -26,11 +27,19 @@ type Props = {
 };
 
 function EditImageModal({ open, onClose, image }: Props) {
+  // Notification hook
   const notifications = useNotifications();
+
+  // Images hook
   const { mutatePutImage, mutatePutImageStatus } = useImages();
+
+  // Categories hook
   const { categories } = useCategories();
+
+  // File state
   const [file, setFile] = useState<File | null>(null);
 
+  // React hook form
   const form = useForm<PostImageType>({
     defaultValues: {
       name: "",
@@ -43,6 +52,7 @@ function EditImageModal({ open, onClose, image }: Props) {
     },
   });
 
+  // Load form data from image API data
   useEffect(() => {
     form.reset({
       name: image.name,
@@ -55,6 +65,7 @@ function EditImageModal({ open, onClose, image }: Props) {
     });
   }, [image, form]);
 
+  // Upload image button styles
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
     clipPath: "inset(50%)",
@@ -68,208 +79,125 @@ function EditImageModal({ open, onClose, image }: Props) {
   });
 
   return (
-    <Modal
-      aria-labelledby='unstyled-modal-title'
-      aria-describedby='unstyled-modal-description'
-      open={open}
-      onClose={onClose}
-      slots={{ backdrop: StyledBackdrop }}
-    >
-      <Fade in={open}>
-        <ModalContent sx={style}>
-          <Typography variant='h6' mb={2}>
-            Edit Image
-          </Typography>
-          <form
-            onSubmit={form.handleSubmit((values) => {
-              if (file) {
-                mutatePutImage(
-                  {
-                    payload: {
-                      name: values.name,
-                      url: values.url,
-                      metadata: {
-                        resolution: values.metadata.resolution,
-                        size: values.metadata.size,
-                      },
-                      categoryId: values.categoryId,
+    <BaseModal onClose={onClose} open={open}>
+      <>
+        <Typography variant='h6' mb={2}>
+          Edit Image
+        </Typography>
+        <form
+          onSubmit={form.handleSubmit((values) => {
+            if (file) {
+              // Upload image
+              mutatePutImage(
+                {
+                  payload: {
+                    name: values.name,
+                    url: values.url,
+                    metadata: {
+                      resolution: values.metadata.resolution,
+                      size: values.metadata.size,
                     },
-                    id: image.id,
+                    categoryId: values.categoryId,
                   },
-                  {
-                    onSuccess: () => {
-                      onClose();
-                      setFile(null);
-                      form.reset();
-                    },
+                  id: image.id,
+                },
+                {
+                  // On success close and reset form
+                  onSuccess: () => {
+                    onClose();
+                    setFile(null);
+                    form.reset();
                   },
-                );
-              } else {
-                notifications.show("Please select an image", {
-                  severity: "error",
-                });
-              }
-            })}
-          >
-            <Stack gap={4}>
-              <FormControl variant='standard'>
-                <InputLabel htmlFor='name'>Name</InputLabel>
-                <Input id='name' {...form.register("name")} />
-              </FormControl>
-              <FormControl fullWidth>
-                <InputLabel id='category'>Category</InputLabel>
-                <Controller
-                  name='categoryId'
-                  control={form.control}
-                  defaultValue={form.getValues().categoryId}
-                  render={({ field }) => (
-                    <Select
-                      labelId='category'
-                      id='category'
-                      label='Category'
-                      {...field}
-                      onChange={(event) => {
-                        field.onChange(+event.target.value);
-                      }}
-                    >
-                      {categories.map((category) => (
-                        <MenuItem value={category.id} key={category.id}>
-                          {category.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  )}
-                />
-              </FormControl>
-              <Button
-                component='label'
-                role={undefined}
-                variant='contained'
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload image
-                <VisuallyHiddenInput
-                  type='file'
-                  onChange={(event) => {
-                    if (event.target.files) {
-                      setFile(event.target.files[0]);
-                    }
-                  }}
-                />
-              </Button>
-            </Stack>
-            <Stack direction='row' justifyContent='end' mt={4} gap={2}>
-              <Button
-                variant='outlined'
-                onClick={() => {
-                  onClose();
-                  setFile(null);
-                  form.reset();
+                },
+              );
+            } else {
+              // If the file is not selected, show an error
+              notifications.show("Please select an image", {
+                severity: "error",
+              });
+            }
+          })}
+        >
+          <Stack gap={4}>
+            {/* Name input */}
+            <FormControl variant='standard'>
+              <InputLabel htmlFor='name'>Name</InputLabel>
+              <Input id='name' {...form.register("name")} />
+            </FormControl>
+
+            {/* Category select */}
+            <FormControl fullWidth>
+              <InputLabel id='category'>Category</InputLabel>
+              <Controller
+                name='categoryId'
+                control={form.control}
+                defaultValue={form.getValues().categoryId}
+                render={({ field }) => (
+                  <Select
+                    labelId='category'
+                    id='category'
+                    label='Category'
+                    {...field}
+                    onChange={(event) => {
+                      field.onChange(+event.target.value);
+                    }}
+                  >
+                    {categories.map((category) => (
+                      <MenuItem value={category.id} key={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
+            </FormControl>
+
+            {/* Image input */}
+            <Button
+              component='label'
+              role={undefined}
+              variant='contained'
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload image
+              <VisuallyHiddenInput
+                type='file'
+                onChange={(event) => {
+                  if (event.target.files) {
+                    setFile(event.target.files[0]);
+                  }
                 }}
-              >
-                Close
-              </Button>
-              <Button
-                variant='contained'
-                type='submit'
-                disabled={mutatePutImageStatus === "pending"}
-                loading={mutatePutImageStatus === "pending"}
-              >
-                Submit
-              </Button>
-            </Stack>
-          </form>
-        </ModalContent>
-      </Fade>
-    </Modal>
+              />
+            </Button>
+          </Stack>
+
+          {/* Modal actions */}
+          <Stack direction='row' justifyContent='end' mt={4} gap={2}>
+            <Button
+              variant='outlined'
+              onClick={() => {
+                onClose();
+                setFile(null);
+                form.reset();
+              }}
+            >
+              Close
+            </Button>
+            <Button
+              variant='contained'
+              type='submit'
+              disabled={mutatePutImageStatus === "pending"}
+              loading={mutatePutImageStatus === "pending"}
+            >
+              Submit
+            </Button>
+          </Stack>
+        </form>
+      </>
+    </BaseModal>
   );
 }
-
-const Backdrop = React.forwardRef<HTMLDivElement, { open: boolean }>(
-  (props, ref) => {
-    const { open, ...other } = props;
-    return (
-      <Fade in={open}>
-        <div ref={ref as React.RefObject<HTMLDivElement>} {...other} />
-      </Fade>
-    );
-  },
-);
-
-Backdrop.displayName = "Backdrop";
-
-const grey = {
-  50: "#F3F6F9",
-  100: "#E5EAF2",
-  200: "#DAE2ED",
-  300: "#C7D0DD",
-  400: "#B0B8C4",
-  500: "#9DA8B7",
-  600: "#6B7A90",
-  700: "#434D5B",
-  800: "#303740",
-  900: "#1C2025",
-};
-
-const Modal = styled(BaseModal)`
-  position: fixed;
-  z-index: 1300;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledBackdrop = styled(Backdrop)`
-  z-index: -1;
-  position: fixed;
-  inset: 0;
-  background-color: rgb(0 0 0 / 0.5);
-  -webkit-tap-highlight-color: transparent;
-`;
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-};
-
-const ModalContent = styled("div")(
-  ({ theme }) => css`
-    font-family: "IBM Plex Sans", sans-serif;
-    font-weight: 500;
-    text-align: start;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow: hidden;
-    background-color: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
-    border-radius: 8px;
-    border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-    box-shadow: 0 4px 12px
-      ${theme.palette.mode === "dark" ? "rgb(0 0 0 / 0.5)" : "rgb(0 0 0 / 0.2)"};
-    padding: 24px;
-    color: ${theme.palette.mode === "dark" ? grey[50] : grey[900]};
-
-    & .modal-title {
-      margin: 0;
-      line-height: 1.5rem;
-      margin-bottom: 8px;
-    }
-
-    & .modal-description {
-      margin: 0;
-      line-height: 1.5rem;
-      font-weight: 400;
-      color: ${theme.palette.mode === "dark" ? grey[400] : grey[800]};
-      margin-bottom: 4px;
-    }
-  `,
-);
 
 export default EditImageModal;
 

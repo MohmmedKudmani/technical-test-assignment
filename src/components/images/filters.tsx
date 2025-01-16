@@ -9,6 +9,7 @@ import React from "react";
 import Stack from "@mui/material/Stack";
 import { CategoryType } from "@/common/schemas/categories.schema";
 
+// Filters props
 interface Props {
   categories: CategoryType[];
   category: string;
@@ -26,6 +27,7 @@ function Filters({
 }: Props) {
   return (
     <Stack mb={4.5} mt={1} direction='row' gap={2}>
+      {/* Select category */}
       <FormControl
         sx={{
           width: 200,
@@ -47,6 +49,8 @@ function Filters({
           ))}
         </Select>
       </FormControl>
+
+      {/* Input search for name */}
       <TextField
         id='name'
         label='Name'
