@@ -124,6 +124,7 @@ function Images() {
                       alt={image.name}
                       width={250}
                       height={200}
+                      priority
                     />
                     <Box
                       className='overlay'
