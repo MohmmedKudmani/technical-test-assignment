@@ -1,77 +1,44 @@
-import * as React from "react";
-import { styled, css, Stack } from "@mui/system";
+"use client";
+
+import { styled, css } from "@mui/system";
 import Fade from "@mui/material/Fade";
-import { Button } from "@mui/material";
-import { Modal as BaseModal } from "@mui/base/Modal";
+import { Modal as MuiModal } from "@mui/base/Modal";
+import { forwardRef } from "react";
 
-type Props = {
-  message: string;
-  title: string;
-  onConfirm: () => void;
-  loading?: boolean;
-  children?: React.ReactNode;
-  open: boolean;
+interface Props {
+  children: React.ReactNode;
   onClose: () => void;
-};
+  open: boolean;
+}
 
-function ConfirmModal({
-  message,
-  onConfirm,
-  title,
-  loading,
-  open,
-  onClose,
-}: Props) {
+function BaseModal({ children, onClose, open }: Props) {
   return (
     <Modal
-      aria-labelledby='unstyled-modal-title'
-      aria-describedby='unstyled-modal-description'
       open={open}
       onClose={onClose}
+      // Backdrop styles
       slots={{ backdrop: StyledBackdrop }}
     >
       <Fade in={open}>
-        <ModalContent sx={style}>
-          <h2 id='transition-modal-title' className='modal-title'>
-            {title}
-          </h2>
-          <p id='transition-modal-description' className='modal-description'>
-            {message}
-          </p>
-          <Stack direction='row' justifyContent='end' mt={2} gap={2}>
-            <Button variant='outlined' onClick={onClose}>
-              Close
-            </Button>
-            <Button
-              variant='contained'
-              onClick={() => {
-                onConfirm();
-              }}
-              disabled={loading}
-              loading={loading}
-            >
-              Confirm
-            </Button>
-          </Stack>
-        </ModalContent>
+        <ModalContent sx={style}>{children}</ModalContent>
       </Fade>
     </Modal>
   );
 }
 
-const Backdrop = React.forwardRef<HTMLDivElement, { open: boolean }>(
-  (props, ref) => {
-    const { open, ...other } = props;
-    return (
-      <Fade in={open}>
-        <div ref={ref as React.RefObject<HTMLDivElement>} {...other} />
-      </Fade>
-    );
-  },
-);
+// Modal backdrop
+const Backdrop = forwardRef<HTMLDivElement, { open: boolean }>((props, ref) => {
+  const { open, ...other } = props;
+  return (
+    <Fade in={open}>
+      <div ref={ref as React.RefObject<HTMLDivElement>} {...other} />
+    </Fade>
+  );
+});
 
 Backdrop.displayName = "Backdrop";
 
+// Modal styles
 const grey = {
   50: "#F3F6F9",
   100: "#E5EAF2",
@@ -85,7 +52,7 @@ const grey = {
   900: "#1C2025",
 };
 
-const Modal = styled(BaseModal)`
+const Modal = styled(MuiModal)`
   position: fixed;
   z-index: 1300;
   inset: 0;
@@ -144,5 +111,5 @@ const ModalContent = styled("div")(
   `,
 );
 
-export default ConfirmModal;
+export default BaseModal;
 

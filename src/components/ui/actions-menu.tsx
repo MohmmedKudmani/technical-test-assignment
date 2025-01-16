@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box } from "@mui/material";
 
+// Update menu styles using emotion
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
     elevation={0}
@@ -51,14 +52,18 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
+// Menu props
 interface Props {
   handleEdit?: () => void;
   handleDelete?: () => void;
 }
 
 function ActionsMenu({ handleDelete, handleEdit }: Props) {
+  // Menu state
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  // Menu handlers
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -68,6 +73,7 @@ function ActionsMenu({ handleDelete, handleEdit }: Props) {
 
   return (
     <div>
+      {/* Menu button */}
       <Box
         onClick={handleClick}
         sx={{
@@ -85,6 +91,8 @@ function ActionsMenu({ handleDelete, handleEdit }: Props) {
       >
         <MoreHorizIcon />
       </Box>
+
+      {/* Menu */}
       <StyledMenu
         id='demo-customized-menu'
         MenuListProps={{
